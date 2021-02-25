@@ -104,9 +104,9 @@ class Heist(commands.Cog):
             return
 
         if player.id == author.id:
-            msg = ("Apa kamu ingin bebasin {0}? Ini membutuhkan biaya sebesar {1}. Apabila kamu "
-                   "ketangkep lagi, selanjutnya kamu {2} dan {0} akan didenda 3x lipat. "
-                   "Apa kamu masih mau membebaskan {0}?".format(t_bail, cost, t_sentence))
+            msg = ("Apa kamu ingin bebas? Ini membutuhkan biaya sebesar {1}. Apabila kamu "
+                   "ketangkep lagi, selanjutnya kamu akan didenda 3x lipat. "
+                   "Apa kamu masih mau membebaskan diri?".format(t_bail, cost, t_sentence))
         else:
             msg = ("Apa kamu yakin ingin memebaskan {0} dari penjara? Ini akan membayarmu sebanyak {1} IDR. "
                    "Apa kamu yakin akan membayar {1} untuk {0}?".format(escape(player.display_name, formatting=True), cost, t_bail))
