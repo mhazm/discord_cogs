@@ -42,12 +42,12 @@ class Heist(commands.Cog):
         """Resets heist in case it hangs"""
         guild = ctx.guild
         await self.thief.reset_heist(guild)
-        await ctx.send("```Heist has been reset```")
+        await ctx.send("```Heist telah di reset```")
 
     @heist.command(name="clear")
     @checks.admin_or_permissions(manage_guild=True)
     async def _clear_heist(self, ctx, user: discord.Member):
-        """Clears a member of jail and death statuses."""
+        """Menghapus member dari status penjara atau mati."""
         author = ctx.message.author
         await self.thief.member_clear(user)
         await ctx.send("```{} administratively cleared {}```".format(escape(author.display_name, formatting=True), escape(user.display_name, formatting=True)))
@@ -60,7 +60,7 @@ class Heist(commands.Cog):
 
     @heist.command(name="targets")
     async def _targets_heist(self, ctx):
-        """Shows a list of targets"""
+        """Menampilkan daftar target"""
         guild = ctx.guild
         theme = await self.thief.get_guild_theme(guild)
         targets = await self.thief.get_guild_targets(guild)
@@ -96,7 +96,7 @@ class Heist(commands.Cog):
             player = user
 
         if await self.thief.get_member_status(player) != "Apprehended":
-            return await ctx.send("{} is not in jail.".format(escape(player.display_name, formatting=True)))
+            return await ctx.send("{} tidak sedang dipenjara.".format(escape(player.display_name, formatting=True)))
 
         cost = await self.thief.get_member_bailcost(player)
         if not await bank.get_balance(player) >= cost:
@@ -115,19 +115,19 @@ class Heist(commands.Cog):
         try:
             response = await self.bot.wait_for("message", timeout=15, check=lambda x: x.author == author)
         except asyncio.TimeoutError:
-            await ctx.send("You took too long. canceling transaction.")
+            await ctx.send("Lu kelamaan, traksasi dibatalkan!")
             return
 
         if "yes" in response.content.lower():
-            msg = ("Congratulations {}, you are free! Enjoy your freedom while it "
+            msg = ("Selamat {}, kamu bebas! Nikmati kebebasanmu "
                    "lasts...".format(escape(player.display_name, formatting=True)))
             await bank.withdraw_credits(author, cost)
             await self.thief.set_member_free(author)
             await self.thief.set_member_oob(author, False)
         elif "no" in response.content.lower():
-            msg = "Canceling transaction."
+            msg = "Traksasi dibatalkan."
         else:
-            msg = "Incorrect response, canceling transaction."
+            msg = "Respon salah, transaksi dibatalkan."
 
         await ctx.send(msg)
 
@@ -148,16 +148,16 @@ class Heist(commands.Cog):
         try:
             name = await self.bot.wait_for("message", timeout=35, check=lambda x: x.author == author)
         except asyncio.TimeoutError:
-            await ctx.send("You took too long. canceling target creation.")
+            await ctx.send("Lu kelamaan, traksasi dibatalkan!")
             return
 
         if name.content == cancel:
-            await ctx.send("Target creation cancelled.")
+            await ctx.send("Pembuatan target dibatalkan.")
             return
 
         targets = await self.thief.get_guild_targets(guild)
         if string.capwords(name.content) in targets:
-            await ctx.send("A target with that name already exists. canceling target "
+            await ctx.send("Nama target udah ada. pembuatan dibatalkan "
                                "creation.")
             return
 
@@ -167,11 +167,11 @@ class Heist(commands.Cog):
         try:
             crew = await self.bot.wait_for("message", timeout=35, check=check)
         except asyncio.TimeoutError:
-            await ctx.send("You took too long. canceling target creation.")
+            await ctx.send("Lu kelamaan, traksasi dibatalkan!")
             return
 
         if crew.content == cancel:
-            await ctx.send("Target creation cancelled.")
+            await ctx.send("Pembuatan target dibatalkan.")
             return
 
         if int(crew.content) in [subdict["Crew"] for subdict in targets.values()]:
@@ -182,7 +182,7 @@ class Heist(commands.Cog):
         try:
             vault = await self.bot.wait_for("message", timeout=35, check=check)
         except asyncio.TimeoutError:
-            await ctx.send("You took too long. canceling target creation.")
+            await ctx.send("Lu kelamaan, traksasi dibatalkan!")
             return
 
         if vault.content == cancel:
@@ -193,7 +193,7 @@ class Heist(commands.Cog):
         try:
             vault_max = await self.bot.wait_for("message", timeout=35, check=check)
         except asyncio.TimeoutError:
-            await ctx.send("You took too long. canceling target creation.")
+            await ctx.send("Lu kelamaan, traksasi dibatalkan!")
             return
         
         if vault_max.content == cancel:
@@ -444,14 +444,14 @@ class Heist(commands.Cog):
         embed.title = author.name
         embed.set_thumbnail(url=avatar)
         embed.add_field(name="Status", value=await self.thief.get_member_status(author))
-        embed.add_field(name="Spree", value=await self.thief.get_member_spree(author))
+        embed.add_field(name="Berhasil", value=await self.thief.get_member_spree(author))
         embed.add_field(name=t_bail, value=await self.thief.get_member_bailcost(author))
         embed.add_field(name=theme["OOB"], value=await self.thief.get_member_oob(author))
         embed.add_field(name=sentencing, value=jail_fmt)
-        embed.add_field(name="Apprehended", value=await self.thief.get_member_jailcounter(author))
-        embed.add_field(name="Death Timer", value=death_fmt)
-        embed.add_field(name="Total Deaths", value=await self.thief.get_member_totaldeaths(author))
-        embed.add_field(name="Lifetime Apprehensions", value=await self.thief.get_member_totaljails(author))
+        embed.add_field(name="Ditangkap", value=await self.thief.get_member_jailcounter(author))
+        embed.add_field(name="Waktu Hidup", value=death_fmt)
+        embed.add_field(name="Total mati", value=await self.thief.get_member_totaldeaths(author))
+        embed.add_field(name="Telah ditangkap", value=await self.thief.get_member_totaljails(author))
 
         await ctx.send(embed=embed)
 

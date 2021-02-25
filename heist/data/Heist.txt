@@ -1,69 +1,69 @@
-Jail = jail
-OOB = out on bail
-Police = Police
-Bail = bail
+Jail = penjara
+OOB = keluar dengan jaminan
+Police = polisi
+Bail = jaminan
 Crew = crew
 Sentence = sentence
 Heist = heist
 Vault = vault
 
-|Good| "{} had the car gassed up and ready to go. +25 credits.", 25
-|Good| "{} cut the power to the bank. +50 credits.", 50
-|Good| "{} erased the video footage. +50 credits.", 50
-|Good| "{} hacked the security system and put it on a loop feed. +75 credits.", 75
-|Good| "{} stopped the teller from triggering the silent alarm. +50 credits.", 50
-|Good| "{} knocked out the local security. +50 credits.", 50
-|Good| "{} stopped a local from being a hero +50 credits.", 50
-|Good| "{} got the police negotiator to deliver everyone pizza. +25 credits.", 25
-|Good| "{} brought masks of former presidents to hide our identity. +25 credits.", 25
-|Good| "{} found an escape route. +25 credits.", 25
-|Good| "{} brought extra ammunition for the crew. +25 credits.", 25
-|Good| "{} cut through that safe like butter. +25 credits.", 25
-|Good| "{} kept the hostages under control. +25 credits.", 25
-|Good| "{} created a distraction to get the crew out. +50 credits.", 50
-|Good| "{} improvised under pressure and got the crew out. +50 credits.", 50
-|Good| "{} counter sniped a sniper. +100 credits.", 100
-|Good| "{} distracted the guard. +25 credits.", 25
-|Good| "{} brought a Go-Bag for the team. +25 credits.", 25
-|Good| "{} found a secret stash in the deposit box room. +50 credits.", 50
-|Good| "{} found a box of jewelry on a civilian. +25 credits.", 25
-|Good| "{} stayed focused and vigilant. +25 credits.", 25
-|Good| "{} spray painted the video cameras. +25 credits.", 25
-|Good| "{} located the vault manager. +25 credits.", 25
-|Good| "{} set a clever trap for the swat team. +50 credits.", 50
-|Good| "{} Planned the getaway route. +25 credits.", 25
-|Good| "{} Changed vehicles by stealing an old lady's car. +50 credits.", 50
+|Good| "{} menyiapkan mobil dan telah siap untuk pergi +500 credits.", 500
+|Good| "{} mematikan listrik bank. +1000 credits.", 1000
+|Good| "{} menghapus bukti rekaman cctv. +1500 credits.", 1500
+|Good| "{} melakukan hack terhadap sistem keamanan dan memberikan video rekaman cctv palsu. +2000 credits.", 2000
+|Good| "{} menghentikan dan menangkap teller bank yang ingin menekan tombol alarm. +500 credits.", 500
+|Good| "{} berhasil melumpuhkan petugas keamanan bank. +500 credits.", 500
+|Good| "{} berhasil menghentikan seseorang yang ingin menjadi hero +500 credits.", 500
+|Good| "{} negosiasi dengan polisi setempat untuk mengantar seblak kesemua orang. +250 credits.", 250
+|Good| "{} menggunakan topeng mantan presiden untuk menyembunyikan identitas. +250 credits.", 250
+|Good| "{} menemukan rute pelarian baru. +2500 credits.", 2500
+|Good| "{} membawa amunisi extra untuk seluruh crew. +2500 credits.", 2500
+|Good| "{} berhasil memotong brankas dengan tidak membunyikan alarm. +5000 credits.", 5000
+|Good| "{} membuat tawanan tetap terkontrol dan situasi tetap aman. +2500 credits.", 2500
+|Good| "{} membuat gangguan untuk membuat celah supaya crew dapat keluar. +5000 credits.", 5000
+|Good| "{} berimprovisasi dibawah tekanan dan berhasil membuat crew keluar. +5000 credits.", 5000
+|Good| "{} menembak polisi yang bersembunyi menggunakan sniper. +10000 credits.", 10000
+|Good| "{} mengalihkan perhatian petugas keamanan. +2500 credits.", 2500
+|Good| "{} membawa tas besar untuk crew. +750 credits.", 750
+|Good| "{} menemukan box rahasia diruang brankas. +5000 credits.", 5000
+|Good| "{} menemukan perhiasan mahal di antara tawanan. +2500 credits.", 2500
+|Good| "{} tetap fokus dan waspada. +250 credits.", 250
+|Good| "{} menyemprotkan pilok ke cctv. +2500 credits.", 2500
+|Good| "{} menemukan dan mengancam manager bank untuk menunjukan lokasi brankas. +2500 credits.", 2500
+|Good| "{} mengatur jebakan untuk polisi. +5000 credits.", 5000
+|Good| "{} mengatur rute pelarian alternatif. +2500 credits.", 2500
+|Good| "{} mengganti kendaraan kabur dengan kendaraan curian yang dicuri dari nenek nenek tua. +5000 credits.", 5000
 
-|Bad| "A shoot out with local authorities began and {0} was hit...but survived!", "Apprehended"
-|Bad| "The cops dusted for finger prints and later arrested {0}.", "Apprehended"
-|Bad| "{0} was gutted in a knife fight.", "Dead"
-|Bad| "{0} blew a tire in the getaway car.", "Apprehended"
-|Bad| "{0}'s gun jammed while fighting local security, and was knocked out.", "Apprehended"
-|Bad| "{0} held off the police while the crew was making their getaway.", "Apprehended"
-|Bad| "A hostage situation went south, and {0} was captured.", "Apprehended"
-|Bad| "{0} showed up to the heist high as kite, and was subsequently caught.", "Apprehended"
-|Bad| "{0}'s bag of money contained exploding blue ink and was later caught.", "Apprehended"
-|Bad| "{0} was sniped by a swat sniper.", "Dead"
-|Bad| "The crew decided to shaft {0}.", "Dead"
-|Bad| "Evidence was later found at {0}'s place' linking them to the heist.", "Apprehended"
-|Bad| "The crew missed a CCTV camera that identified {0} and they were caught.", "Apprehended"
-|Bad| "{0} forgot the escape plan, and took the route leading to the police.", "Apprehended"
-|Bad| "{0} was hit and killed by friendly fire.", "Dead"
-|Bad| "Security system's redundancies caused {0} to be identified.", "Apprehended"
-|Bad| "{0} accidentally revealed their identity to the teller.", "Apprehended"
-|Bad| "The swat team released sleeping gas, {0} is sleeping like a baby.", "Apprehended"
-|Bad| "'FLASH BANG OUT!', was the last thing {0} heard.", "Apprehended"
-|Bad| "'GRENADE OUT!', {0} is now sleeping with the fishes.", "Dead"
-|Bad| "{0} tripped a laser wire and was caught.", "Apprehended"
-|Bad| "One of the hostages later identified {0} from the heist.", "Apprehended"
-|Bad| "During the power outage, police caught {0} in the confusion.", "Apprehended"
-|Bad| "{0} was left behind for slowing down the crew, due to a leg wound.", "Apprehended"
-|Bad| "Someone snitched and {0} was arrested.", "Apprehended"
-|Bad| "Before the crew could intervene a guard tazed {0} and is now out cold.", "Apprehended"
-|Bad| "Swat came through the vents, and neutralized {0}.", "Apprehended"
-|Bad| "During a high-speed chase, {0} was shot by the cops.", "Dead"
-|Bad| "A fire was started in the bank, and {0} passed out from inhalation.", "Apprehended"
-|Bad| "{0} cut the wrong wire to the bank's systems and was electrocuted, but lived.", "Apprehended"
-|Bad| "During the escape, the crew left {0} behind.", "Apprehended"
-|Bad| "The crew knocked out {0} because they shot a hostage without cause.", "Apprehended"
+|Bad| "Baku tembak dengan petugas kepolisian setempat dan {0} terkena tembakan...dia selamat tapi tertangkap!", "Apprehended"
+|Bad| "Polisi berhasil menyelediki sidik jarinya dan kemudian {0} ditangkap.", "Apprehended"
+|Bad| "{0} ditusuk dengan pisau oleh seseorang warga yang menjadi hero", "Dead"
+|Bad| "{0} ban mobil meletus disaat ingin kabur.", "Apprehended"
+|Bad| "{0} senjatanya kehabisan peluru saat adu tembak dengan polisi, dia tertangkap.", "Apprehended"
+|Bad| "{0} menahan polisi dalam adu tembak saat kru sedang melarikan diri", "Apprehended"
+|Bad| "Seorang sandera berhasil membebaskan diri dan memberanikan diri untuk menangkapmu. {0} tertangkap.", "Apprehended"
+|Bad| "{0} tersandung kabel saat ingin melarikan diri dan dia tertangkap", "Apprehended"
+|Bad| "{0} tas yang dibawanya meledak saat melarikan diri", "Apprehended"
+|Bad| "{0} ditembak mati oleh sniper polisi.", "Dead"
+|Bad| "Para kru memutuskan untuk mengorbankan {0}.", "Dead"
+|Bad| "Bukti kemudian ditemukan di tempat {0} menghubungkan dia ke perampokan yang terjadi.", "Apprehended"
+|Bad| "Para kru melewatkan kamera cctv dan teridentifikasi. {0} berhasil ditangkap.", "Apprehended"
+|Bad| "{0} lupa arah saat kabur dan berhasil ditangkap oleh polisi.", "Apprehended"
+|Bad| "{0} tertembak oleh peluru kru sendiri.", "Dead"
+|Bad| "Petugas keamanan bank ternyata teman dekatmu, {0} dilaporkan kepolisi.", "Apprehended"
+|Bad| "{0} identitasnya dikenal oleh teller bank. Dilaporkan dan berhasil dibekuk dirumahnya.", "Apprehended"
+|Bad| "Tim polisi melemparkan gas tidur, {0} tertidur seperti bayi.", "Apprehended"
+|Bad| "'FLASH BANG!', adalah hal terakhir {0} teriakan.", "Apprehended"
+|Bad| "'GRENADE OUT!', {0} sekarang tertidur dengan tenang.", "Dead"
+|Bad| "{0} tersandung kawat laser dan tertangkap.", "Apprehended"
+|Bad| "Salah satu dari korban mengenali {0} dari kejadian perampokan.", "Apprehended"
+|Bad| "Saat listrik pada, polisi berhasil menangkap {0} yang sedang kebingungan.", "Apprehended"
+|Bad| "{0} ditinggal karena memperlambat kru karena luka dikakinya.", "Apprehended"
+|Bad| "{0} ditinggal oleh kru dan digunakan sebagai tameng untuk memperlambat polisi datang", "Apprehended"
+|Bad| "{0} tertembak pistol listrik dan tidak bisa bergerak.", "Apprehended"
+|Bad| "SWAT datang dengan squad penuh dan {0} berhasil ditangkap.", "Apprehended"
+|Bad| "Saat dalam pelarian dengan kecepatan tinggi, {0} tertembak oleh polisi.", "Dead"
+|Bad| "Bank tempat perampokan tiba-tiba terbakar dan {0} panik dan berlari kearah yang salah.", "Apprehended"
+|Bad| "{0} memotong kabel yang salah dan akhirnya tersetrum.", "Apprehended"
+|Bad| "Disaat pelarian, kru meninggalkan {0} sendirian.", "Apprehended"
+|Bad| "{0} ditinggal oleh kru saat dirinya ke toilet.", "Apprehended"
 
