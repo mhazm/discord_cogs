@@ -120,7 +120,7 @@ class Heist(commands.Cog):
 
         if "yes" in response.content.lower():
             msg = ("Selamat {}, kamu bebas! Nikmati kebebasanmu "
-                   "lasts...".format(escape(player.display_name, formatting=True)))
+                   "selamat...".format(escape(player.display_name, formatting=True)))
             await bank.withdraw_credits(author, cost)
             await self.thief.set_member_free(author)
             await self.thief.set_member_oob(author, False)
@@ -222,8 +222,8 @@ class Heist(commands.Cog):
                                                     vault.content, vault_max.content,
                                                     success.content)
                    )
-            target_fmt = {"Kru": int(crew.content), "Kekayaan": int(vault.content),
-                          "Kekayaan Max": int(vault_max.content), "Rate": int(success.content)}
+            target_fmt = {"Kru": int(crew.content), "Vault": int(vault.content),
+                          "Vault Max": int(vault_max.content), "Rate": int(success.content)}
             targets[string.capwords(name.content)] = target_fmt
             await self.thief.save_targets(guild, targets)
             await ctx.send(msg)
@@ -357,7 +357,7 @@ class Heist(commands.Cog):
 
     @heist.command(name="release")
     async def _release_heist(self, ctx):
-        """Removes you from jail or clears bail status if sentence served."""
+        """Keluar dari penjara dan menghapus status jail kamu."""
         author = ctx.message.author
         guild = ctx.guild
         player_time = await self.thief.get_member_timeserved(author)

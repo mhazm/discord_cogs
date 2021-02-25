@@ -3,7 +3,7 @@ OOB = keluar dengan jaminan
 Police = polisi
 Bail = jaminan
 Crew = crew
-Sentence = sentence
+Sentence = hukuman
 Heist = heist
 Vault = kekayaan
 
