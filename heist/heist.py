@@ -487,7 +487,7 @@ class Heist(commands.Cog):
             await self.thief.config.guild(guild).Config.set(config)
             crew = await self.thief.add_crew_member(author)
             await ctx.send("Sebuah perampokan direncanakan oleh {0}\nPerampokan "
-                               "akan dimulai dalam {1} detik. Ketik {2}heist play untuk bergabung dengan"
+                               "akan dimulai dalam {1} detik. Ketik {2}heist play untuk bergabung dengan "
                                "{3}.".format(escape(author.display_name, formatting=True), wait_time, ctx.prefix, t_crew, t_heist))
             await asyncio.sleep(wait_time)
             
