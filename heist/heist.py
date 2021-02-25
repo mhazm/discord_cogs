@@ -370,20 +370,20 @@ class Heist(commands.Cog):
         t_sentence = theme["Sentence"]
 
         if await self.thief.get_member_status(author) != "Apprehended" or oob:
-            await ctx.send("I can't remove you from {0} if you're not "
-                               "*in* {0}.".format(t_jail))
+            await ctx.send("Aku tidak dapat membebaskanmu dari {0} karena kamu tidak "
+                               "*masuk* {0}.".format(t_jail))
             return
 
         remaining = self.thief.cooldown_calculator(player_time, base_time)
         if remaining != "No Cooldown":
-            await ctx.send("You still have time on your {}. You still need to wait:\n"
+            await ctx.send("Kamu masih punya waktu di {}. Kamu harus menunggu:\n"
                                "```{}```".format(t_sentence, remaining))
             return
 
-        msg = "You served your time. Enjoy the fresh air of freedom while you can."
+        msg = "Nikmati kebebasanmu dan nikmatilah udara segar dunia!."
 
         if oob:
-            msg = "You are no longer on probation! 3x penalty removed."
+            msg = "Kamu tidak lagi dalam masa percobaan! 3x pinalti dihapuskan."
             await self.thief.set_member_oob(author, False)
 
         await self.thief.set_member_sentence(author, 0)
@@ -486,16 +486,16 @@ class Heist(commands.Cog):
             config["Planned"] = True
             await self.thief.config.guild(guild).Config.set(config)
             crew = await self.thief.add_crew_member(author)
-            await ctx.send("Sebuah perampokan direncanakan oleh {0}\n Perampokan"
-                               "akan dimulai dalam {1} detik. Ketik {2}heist play untuk bergabung "
+            await ctx.send("Sebuah perampokan direncanakan oleh {0}\nPerampokan "
+                               "akan dimulai dalam {1} detik. Ketik {2}heist play untuk bergabung dengan"
                                "{3}.".format(escape(author.display_name, formatting=True), wait_time, ctx.prefix, t_crew, t_heist))
             await asyncio.sleep(wait_time)
             
             crew = await self.thief.config.guild(guild).Crew()
 
             if len(crew) <= 1:
-                await ctx.send("Kamu mencoba memulai perampokan, tetapi tidak seorangpun mengikutimu. "
-                                   "{} telah digagalkan.".format(t_crew, t_heist))
+                await ctx.send("Kamu mencoba memulai perampokan, tidak seorangpun mengikutimu. "
+                                   "{} telah dibubarkan.".format(t_crew, t_heist))
                 await self.thief.reset_heist(guild)
             else:
                 await self.heist_game(ctx, guild, t_heist, t_crew, t_vault)
