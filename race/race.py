@@ -80,30 +80,29 @@ class Race(commands.Cog):
 
     @race.command()
     async def start(self, ctx):
-        """Begins a new race.
+        """Memulai balapan baru.
 
-        You cannot start a new race until the active on has ended.
+        Kamu tidak dapat membuat balapan baru saat balapan telah dimulai.
 
-        If you are the only player in the race, you will race against
-        your bot.
+        Apabila hanya kamu yang bermain, kamu akan bermain dengan bot.
 
-        The user who started the race is automatically entered into the race.
+        Member yang memulai balapan secara otomatis mengikuti balapan.
         """
         if self.active[ctx.guild.id]:
-            return await ctx.send(f"A race is already in progress!  Type `{ctx.prefix}race enter` to enter!")
+            return await ctx.send(f"Perlombaan sedang berlangsung!  Ketik `{ctx.prefix}race enter` untuk bergabung!")
         self.active[ctx.guild.id] = True
         self.players[ctx.guild.id].append(ctx.author)
         wait = await self.config.guild(ctx.guild).Wait()
         current = await self.config.guild(ctx.guild).Games_Played()
         await self.config.guild(ctx.guild).Games_Played.set(current + 1)
         await ctx.send(
-            f"🚩 A race has begun! Type {ctx.prefix}race enter "
-            f"to join the race! 🚩\nThe race will begin in "
-            f"{wait} seconds!\n\n**{ctx.author.mention}** entered the race!"
+            f"🚩 Balapan dimulai! Ketik {ctx.prefix}race enter "
+            f"untuk bergabung balapan! 🚩\nBalapan akan berlangsung dalam "
+            f"{wait} detik!\n\n**{ctx.author.mention}** bergabung dalam balapan!"
         )
         await asyncio.sleep(wait)
         self.started[ctx.guild.id] = True
-        await ctx.send("🏁 The race is now in progress. 🏁")
+        await ctx.send("🏁 Perlombaan sekarang sedang berlangsung. 🏁")
         await self.run_game(ctx)
 
         settings = await self.config.guild(ctx.guild).all()
@@ -115,7 +114,7 @@ class Race(commands.Cog):
 
     @race.command()
     async def stats(self, ctx, user: discord.Member = None):
-        """Display your race stats."""
+        """Menampilkan data balapan."""
         if not user:
             user = ctx.author
         color = await ctx.embed_colour()
@@ -129,51 +128,50 @@ class Race(commands.Cog):
         embed = discord.Embed(color=color, description="Race Stats")
         embed.set_author(name=f"{user}", icon_url=user.avatar_url)
         embed.add_field(
-            name="Wins",
+            name="Menang",
             value=(
                 f"1st: {user_data['Wins']['1']}\n2nd: {user_data['Wins']['2']}\n3rd: {user_data['Wins']['3']}"
             ),
         )
-        embed.add_field(name="Losses", value=f'{user_data["Losses"]}')
+        embed.add_field(name="Kalah", value=f'{user_data["Losses"]}')
         embed.set_footer(
             text=(
-                f"You have played in {player_total} ({percent}%) races out "
-                f"of {server_total} total races on the server."
+                f"Anda telah bermain {player_total} ({percent}%) balapan "
+                f"dari {server_total} total balapan di server ini."
             )
         )
         await ctx.send(embed=embed)
 
     @race.command()
     async def bet(self, ctx, bet: int, user: discord.Member):
-        """Bet on a user in the race."""
+        """Taruhan balapan."""
         if await self.bet_conditions(ctx, bet, user):
             self.bets[ctx.guild.id][ctx.author.id] = {user.id: bet}
             currency = await bank.get_currency_name(ctx.guild)
             await bank.withdraw_credits(ctx.author, bet)
-            await ctx.send(f"{ctx.author.mention} placed a {bet} {currency} bet on {user.display_name}.")
+            await ctx.send(f"{ctx.author.mention} menaruh sebanyak {bet} {currency} bertaruh untuk {user.display_name}.")
 
     @race.command()
     async def enter(self, ctx):
-        """Allows you to enter the race.
+        """Begabung dalam balapan.
 
-        This command will return silently if a race has already started.
-        By not repeatedly telling the user that they can't enter the race, this
-        prevents spam.
+        Perintah ini akan menghilang sendiri saat balapan dimulai.
+        Dengan tidak berulang kali memberitahukan kepada player bahwa dia mengikuti balapan.
 
         """
         if self.started[ctx.guild.id]:
             return await ctx.send(
-                "A race has already started.  Please wait for the first one to finish before entering or starting a race."
+                "Perlombaan telah dimulai.  Silahkan tunggu sampai itu selesai dan baru membuat perlombaan baru!."
             )
         elif not self.active.get(ctx.guild.id):
-            return await ctx.send("A race must be started before you can enter.")
+            return await ctx.send("Perlombaan harus dibuat sebelum kamu dapat bergabung.")
         elif ctx.author in self.players[ctx.guild.id]:
-            return await ctx.send("You have already entered the race.")
+            return await ctx.send("Kamu telah bergabung dalam perlombaan.")
         elif len(self.players[ctx.guild.id]) >= 14:
-            return await ctx.send("The maximum number of players has been reached.")
+            return await ctx.send("Jumlah maksimum peserta telah mencapai batas maksimum.")
         else:
             self.players[ctx.guild.id].append(ctx.author)
-            await ctx.send(f"{ctx.author.mention} has joined the race.")
+            await ctx.send(f"{ctx.author.mention} telah gabung dalam balapan.")
 
     @race.command(hidden=True)
     @checks.admin_or_permissions(administrator=True)
@@ -231,42 +229,42 @@ class Race(commands.Cog):
         if wait < 0:
             return await ctx.send("Really? You're an idiot.")
         await self.config.guild(ctx.guild).Wait.set(wait)
-        await ctx.send(f"Wait time before a race begins is now {wait} seconds.")
+        await ctx.send(f"Waktu menunggu peserta balapan sekarang menjadi {wait} detik.")
 
     @setrace.group(name="bet")
     async def _bet(self, ctx):
-        """Bet settings for race."""
+        """Mengatur taruhan untuk balapan."""
         pass
 
     @_bet.command(name="min")
     async def _min(self, ctx, amount: int):
         """Sets the betting minimum."""
         if amount < 0:
-            return await ctx.send("Come on now. Let's be reasonable.")
+            return await ctx.send("Ayolah!. Pake sedikit otakmu itu.")
         maximum = await self.config.guild(ctx.guild).Bet_Max()
         if amount > maximum:
-            return await ctx.send(f"Minimum must be lower than the set max of {maximum}.")
+            return await ctx.send(f"Jumlah maksimum taruhan harus lebih tinggi dari {maximum}.")
 
         await self.config.guild(ctx.guild).Bet_Min.set(amount)
-        await ctx.send(f"Minimum bet amount set to {amount}.")
+        await ctx.send(f"Minimum taruhan di set ke {amount}.")
 
     @_bet.command(name="max")
     async def _max(self, ctx, amount: int):
         """Sets the betting maximum."""
         if amount < 0:
-            return await ctx.send("Come on now. Let's be reasonable.")
+            return await ctx.send("Ayolah!. Pake sedikit otakmu itu.")
         if amount > 2 ** 63 - 1:
-            return await ctx.send("Come on now. Let's be reasonable.")
+            return await ctx.send("Ayolah!. Pake sedikit otakmu itu.")
         minimum = await self.config.guild(ctx.guild).Bet_Min()
         if amount < minimum:
-            return await ctx.send(f"Maximum must be higher than the set min of {minimum}.")
+            return await ctx.send(f"Jumlah maksimum harus lebih tinggi dari {minimum}.")
 
         await self.config.guild(ctx.guild).Bet_Max.set(amount)
-        await ctx.send(f"Maximum bet amount set to {amount}.")
+        await ctx.send(f"Maksimum taruhan di setting ke {amount}.")
 
     @_bet.command()
     async def multiplier(self, ctx, multiplier: float):
-        """Sets the betting multiplier.
+        """Mengatur multipler taruhan.
         
         If the bot's economy mode is set to global instead of server-based, this setting is not available.
         """
@@ -285,10 +283,10 @@ class Race(commands.Cog):
 
     @_bet.command()
     async def toggle(self, ctx):
-        """Toggles betting on and off."""
+        """Hidupkan/Matikan taruhan."""
         current = await self.config.guild(ctx.guild).Bet_Allowed()
         await self.config.guild(ctx.guild).Bet_Allowed.set(not current)
-        await ctx.send(f"Betting is now {'OFF' if current else 'ON'}.")
+        await ctx.send(f"Taruhan sekarang di {'OFF' if current else 'ON'}.")
 
     @setrace.command()
     async def mode(self, ctx, mode: str):
@@ -311,12 +309,12 @@ class Race(commands.Cog):
 
     @setrace.command()
     async def prize(self, ctx, prize: int):
-        """Sets the prize pool for winners.
+        """Set hadiah pemenang balapan.
 
-        Set the prize to 0 if you do not wish any credits to be distributed.
+        Mengatur hadiah ke 0 akan membuat player tidak mendapatkan apa-apa.
 
-        When prize pooling is enabled (see `[p]setrace togglepool`) the prize 
-        will be distributed as follows:
+        Saat pengumpulan hadiah diaktifkan (lihat `[p]setrace togglepool`) hadiahnya 
+        akan dibagikan mengikuti:
             1st place 60%
             2nd place 30%
             3rd place 10%
@@ -325,33 +323,33 @@ class Race(commands.Cog):
             100 results in 60, 30, 10
             130 results in 78, 39, 13
 
-        When prize pooling is disabled, only first place will win, and they take
-        100% of the winnings.
+        Apabila pengumpulan hadiah dinonaktifkan, hanya juara 1 yang menang, dan dia akan
+        mengambil 100% hadiahnya.
         """
         if prize < 0:
-            return await ctx.send("... that's not how prizes work buddy.")
+            return await ctx.send("... bukan begitu cara kerja hadiahnya sobat.")
         if prize == 0:
-            return await ctx.send("No prizes will be awarded to the winners.")
+            return await ctx.send("Tidak ada hadiah yang akan diberikan kepada para pemenang.")
         if prize > 2 ** 63 - 1:
-            return await ctx.send("Try a smaller number.")
+            return await ctx.send("Coba angka yang lebih kecil.")
         else:
             currency = await bank.get_currency_name(ctx.guild)
             await self.config.guild(ctx.guild).Prize.set(prize)
-            await ctx.send(f"Prize set for {prize} {currency}.")
+            await ctx.send(f"Hadiah diset menjadi {prize} {currency}.")
 
     @setrace.command(name="togglepool")
     async def _tooglepool(self, ctx):
-        """Toggles on/off prize pooling.
+        """Mematikan/Menghidupkan pengumpulan hadiah.
 
-        Makes it so that prizes are pooled between 1st, 2nd, and 3rd.
-        It's a 60/30/10 split rounded to the nearest whole number.
+        Membuat hadiah untuk juara 1st, 2nd, and 3rd.
+        Menjadi 60/30/10 dibagi tergantung posisi kemenangan.
 
-        There must be at least four human players, otherwise, only first
-        place wins.
+        Setidaknya harus ada empat pemain, jika tidak, hanya yang pertama
+        yang akan menang!.
         """
         pool = await self.config.guild(ctx.guild).Pooling()
         await self.config.guild(ctx.guild).Pooling.set(not pool)
-        await ctx.send(f"Prize pooling is now {'OFF' if pool else 'ON'}.")
+        await ctx.send(f"Pengumpulan hadiah sekarang {'OFF' if pool else 'ON'}.")
 
     @setrace.command()
     async def payoutmin(self, ctx, players: int):
@@ -431,16 +429,16 @@ class Race(commands.Cog):
 
     async def bet_conditions(self, ctx, bet, user):
         if not self.active[ctx.guild.id]:
-            await ctx.send("There isn't a race right now.")
+            await ctx.send("Tidak ada balapan sekarang.")
             return False
         elif self.started[ctx.guild.id]:
             await ctx.send("You can't place a bet after the race has started.")
             return False
         elif user not in self.players[ctx.guild.id]:
-            await ctx.send("You can't bet on someone who isn't in the race.")
+            await ctx.send("Anda tidak dapat memasang taruhan setelah balapan dimulai.")
             return False
         elif self.bets[ctx.guild.id][ctx.author.id]:
-            await ctx.send("You have already entered a bet for the race.")
+            await ctx.send("Anda sudah memasukkan taruhan untuk balapan.")
             return False
 
         # Separated the logic such that calls to config only happen if the statements
@@ -451,14 +449,14 @@ class Race(commands.Cog):
         maximum = data["Bet_Max"]
 
         if not allowed:
-            await ctx.send("Betting has been turned off.")
+            await ctx.send("Taruhan telah dimatikan.")
             return False
         elif not await bank.can_spend(ctx.author, bet):
-            await ctx.send("You do not have enough money to cover the bet.")
+            await ctx.send("Anda tidak punya cukup uang untuk memulai taruhan.")
         elif minimum <= bet <= maximum:
             return True
         else:
-            await ctx.send(f"Bet must not be lower than {minimum} or higher than {maximum}.")
+            await ctx.send(f"Taruhan tidak boleh lebih rendah dari {minimum} atau lebih tinggi dari {maximum}.")
             return False
 
     async def _build_end_screen(self, ctx, settings, currency, color):
@@ -492,20 +490,20 @@ class Race(commands.Cog):
 
     def _payout_msg(self, ctx, settings, currency):
         if settings["Prize"] == 0:
-            return "No prize money was distributed."
+            return "Tidak ada hadiah uang yang dibagikan."
         elif settings["Payout_Min"] > len(self.players[ctx.guild.id]):
-            return "Not enough racers to give prizes."
+            return "Pembalap tidak cukup untuk memberikan hadiah."
         elif not settings["Pooling"] or len(self.players[ctx.guild.id]) < 4:
             if self.winners[ctx.guild.id][0][0].bot:
-                return f"{self.winners[ctx.guild.id][0][0]} is the winner!"
-            return f"{self.winners[ctx.guild.id][0][0]} received {settings['Prize']} {currency}."
+                return f"{self.winners[ctx.guild.id][0][0]} adalah pemenangnya!"
+            return f"{self.winners[ctx.guild.id][0][0]} mendapatkan {settings['Prize']} {currency}."
         if settings["Pooling"]:
             msg = ""
             first, second, third = self.winners[ctx.guild.id]
             for player, percentage in zip((first[0], second[0], third[0]), (0.6, 0.3, 0.1)):
                 if player.bot:
                     continue
-                msg += f'{player.display_name} received {int(settings["Prize"] * percentage)} {currency}. '
+                msg += f'{player.display_name} mendapatkan {int(settings["Prize"] * percentage)} {currency}. '
             return msg
 
     async def _get_bet_winners(self, ctx, winner):
