@@ -39,7 +39,7 @@ class Heist(commands.Cog):
     @heist.command(name="reset")
     @checks.admin_or_permissions(manage_guild=True)
     async def _reset_heist(self, ctx):
-        """Resets heist in case it hangs"""
+        """Reset heist"""
         guild = ctx.guild
         await self.thief.reset_heist(guild)
         await ctx.send("```Heist telah di reset```")
@@ -50,13 +50,13 @@ class Heist(commands.Cog):
         """Menghapus member dari status penjara atau mati."""
         author = ctx.message.author
         await self.thief.member_clear(user)
-        await ctx.send("```{} administratively cleared {}```".format(escape(author.display_name, formatting=True), escape(user.display_name, formatting=True)))
+        await ctx.send("```{} menghapus status penjara/mati {}```".format(escape(author.display_name, formatting=True), escape(user.display_name, formatting=True)))
 
     @heist.command(name="version")
     @checks.admin_or_permissions(manage_guild=True)
     async def _version_heist(self, ctx):
-        """Shows the version of heist you are running"""
-        await ctx.send("You are running v3 Heist version {}.".format(self.version))
+        """Menunjukan versi heist sekarang"""
+        await ctx.send("Sekarang dijalankan heist versi {}.".format(self.version))
 
     @heist.command(name="targets")
     async def _targets_heist(self, ctx):
@@ -67,7 +67,7 @@ class Heist(commands.Cog):
         t_vault = theme["Vault"]
 
         if len(targets.keys()) < 0:
-            msg = ("There aren't any targets! To create a target use {}heist "
+            msg = ("Tidak ada target heist, buat dengan {}heist "
                    "createtarget .".format(ctx.prefix))
         else:
             target_names = [x for x in targets]
@@ -76,14 +76,14 @@ class Heist(commands.Cog):
             vaults = [subdict["Vault"] for subdict in targets.values()]
             data = list(zip(target_names, crews, vaults, success))
             table_data = sorted(data, key=itemgetter(1), reverse=True)
-            table = tabulate(table_data, headers=["Target", "Max Crew", t_vault, "Success Rate"])
+            table = tabulate(table_data, headers=["Target", "Jumlah Kru", t_vault, "Rate berhasil"])
             msg = "```C\n{}```".format(table)
 
         await ctx.send(msg)
 
     @heist.command(name="bailout")
     async def _bailout_heist(self, ctx, user: discord.Member=None):
-        """Specify who you want to pay for release. Defaults to you."""
+        """Spesifikasikan kamu ingin membebaskan siapa, defaultnya kamu sendiri."""
         author = ctx.message.author
         theme = await self.thief.get_guild_theme(ctx.guild)
 
@@ -100,16 +100,16 @@ class Heist(commands.Cog):
 
         cost = await self.thief.get_member_bailcost(player)
         if not await bank.get_balance(player) >= cost:
-            await ctx.send("You do not have enough to afford the {} amount.".format(t_bail))
+            await ctx.send("Kamu ngga punya duit untuk bebasin {}.".format(t_bail))
             return
 
         if player.id == author.id:
-            msg = ("Do you want to make a {0} amount? It will cost {1} credits. If you are "
-                   "caught again, your next {2} and {0} amount will triple. "
-                   "Do you still wish to pay the {0} amount?".format(t_bail, cost, t_sentence))
+            msg = ("Apa kamu ingin bebasin {0}? Ini membutuhkan biaya sebesar {1}. Apabila kamu "
+                   "ketangkep lagi, selanjutnya kamu {2} dan {0} akan didenda 3x lipat. "
+                   "Apa kamu masih mau membebaskan {0}?".format(t_bail, cost, t_sentence))
         else:
-            msg = ("You are about pay a {2} amount for {0} and it will cost you {1} credits. "
-                   "Are you sure you wish to pay {1} for {0}?".format(escape(player.display_name, formatting=True), cost, t_bail))
+            msg = ("Apa kamu yakin ingin memebaskan {0} dari penjara? Ini akan membayarmu sebanyak {1} IDR. "
+                   "Apa kamu yakin akan membayar {1} untuk {0}?".format(escape(player.display_name, formatting=True), cost, t_bail))
 
         await ctx.send(msg)
         try:
@@ -134,15 +134,15 @@ class Heist(commands.Cog):
     @heist.command(name="createtarget")
     @checks.admin_or_permissions(manage_guild=True)
     async def _targetadd_heist(self, ctx):
-        """Add a target to heist"""
+        """Tambah target heist"""
 
         author = ctx.message.author
         guild = ctx.guild
         cancel = ctx.prefix + "cancel"
         check = lambda m: m.author == author and (m.content.isdigit() and int(m.content) > 0 or m.content == cancel)
-        start = ("This will walk-through the target creation process. You may cancel this process "
-                 "at anytime by typing {}cancel. Let's begin with the first question.\nWhat is the "
-                 "name of this target?".format(ctx.prefix))
+        start = ("Pembuatan heist dengan step-by-step, apabila ingin berhenti "
+                 "kamu dapat ketik {}cancel. Ayo mulai dengan pertanyaan pertama.\nApa nama "
+                 "tempat dari target?".format(ctx.prefix))
 
         await ctx.send(start)
         try:
@@ -161,13 +161,13 @@ class Heist(commands.Cog):
                                "creation.")
             return
 
-        await ctx.send("What is the max crew size for this target? Cannot be the same as "
-                           "other targets.\n*Crews over this size will go to the next "
-                           "largest bank.*")
+        await ctx.send("Berapa jumlah kru untuk tempat ini? Tidak dapat sama dengan"
+                           "target lain.\n*Jumlah crew akan menentukan tempat heist "
+                           "ke level berikutnya.*")
         try:
             crew = await self.bot.wait_for("message", timeout=35, check=check)
         except asyncio.TimeoutError:
-            await ctx.send("Lu kelamaan, traksasi dibatalkan!")
+            await ctx.send("Lu kelamaan, pembuatan target dibatalkan!")
             return
 
         if crew.content == cancel:
@@ -175,55 +175,55 @@ class Heist(commands.Cog):
             return
 
         if int(crew.content) in [subdict["Crew"] for subdict in targets.values()]:
-            await ctx.send("Group size conflicts with another target. Canceling target creation.")
+            await ctx.send("Jumlah kru udah ada. Pembuatan target dibatalkan.")
             return
 
-        await ctx.send("How many starting credits does this target have?")
+        await ctx.send("Berapa banyak uang minimum yang target punya?")
         try:
             vault = await self.bot.wait_for("message", timeout=35, check=check)
         except asyncio.TimeoutError:
-            await ctx.send("Lu kelamaan, traksasi dibatalkan!")
+            await ctx.send("Lu kelamaan, pembuatan target dibatalkan!")
             return
 
         if vault.content == cancel:
-            await ctx.send("Target creation cancelled.")
+            await ctx.send("Pembuatan target dibatalkan.")
             return
 
-        await ctx.send("What is the maximum number of credits this target can hold?")
+        await ctx.send("Berapa banyak uang maksimum yang dimiliki target?")
         try:
             vault_max = await self.bot.wait_for("message", timeout=35, check=check)
         except asyncio.TimeoutError:
-            await ctx.send("Lu kelamaan, traksasi dibatalkan!")
+            await ctx.send("Lu kelamaan, pembuatan target dibatalkan!")
             return
         
         if vault_max.content == cancel:
-            await ctx.send("Target creation cancelled.")
+            await ctx.send("Pembuatan target dibatalkan.")
             return
         
         if vault_max.content.isdigit() and int(vault_max.content) >= ((2**64)-1):
-            return await ctx.send("Number is too high, canceling target creation.")
+            return await ctx.send("Jumlah terlalu besar!, pembuatan target dibatalkan.")
 
-        await ctx.send("What is the individual chance of success for this target? 1-100")
+        await ctx.send("Berapa persen tingkat keberhasilannya? 1-100")
         #check = lambda m: m.content.isdigit() and 0 < int(m.content) <= 100 or m.content == cancel # <--- missing author check here?
         check = lambda m: m.author == author and (m.content.isdigit() and 0 < int(m.content) <= 100 or m.content == cancel)
         
         try:
             success = await self.bot.wait_for("message", timeout=35, check=check)
         except asyncio.TimeoutError:
-            await ctx.send("You took too long. canceling target creation.")
+            await ctx.send("Lu kelamaan, pembuatan target dibatalkan!")
             return
 
         if success.content == cancel:
-            await ctx.send("Target creation cancelled.")
+            await ctx.send("Pembuatan target dibatalkan.")
             return
         else:
-            msg = ("Target Created.\n```Name:       {}\nGroup:      {}\nVault:      {}\nVault Max: "
-                   " {}\nSuccess:    {}%```".format(string.capwords(name.content), crew.content,
+            msg = ("Target Dibuat.\n```Name:       {}\nGroup:      {}\nUang Minimum:      {}\nUang Maksimum: "
+                   " {}\nRate:    {}%```".format(string.capwords(name.content), crew.content,
                                                     vault.content, vault_max.content,
                                                     success.content)
                    )
-            target_fmt = {"Crew": int(crew.content), "Vault": int(vault.content),
-                          "Vault Max": int(vault_max.content), "Success": int(success.content)}
+            target_fmt = {"Kru": int(crew.content), "Kekayaan": int(vault.content),
+                          "Kekayaan Max": int(vault_max.content), "Rate": int(success.content)}
             targets[string.capwords(name.content)] = target_fmt
             await self.thief.save_targets(guild, targets)
             await ctx.send(msg)
@@ -231,53 +231,53 @@ class Heist(commands.Cog):
     @heist.command(name="edittarget")
     @checks.admin_or_permissions(manage_guild=True)
     async def _edittarget_heist(self, ctx, *, target: str):
-        """Edits a heist target"""
+        """Mengedit target heist"""
         author = ctx.message.author
         guild = ctx.guild
         target = string.capwords(target)
         targets = await self.thief.get_guild_targets(guild)
 
         if target not in targets:
-            return await ctx.send("That target does not exist.")
+            return await ctx.send("Target tidak ada.")
 
         keys = [x for x in targets[target]]
         keys.append("Name")
         check = lambda m: m.content.title() in keys and m.author == author
 
-        await ctx.send("Which property of {} would you like to edit?\n"
+        await ctx.send("Apa yang akan di edit dari {}?\n"
                            "{}".format(target, ", ".join(keys)))
         
         try:
             response = await self.bot.wait_for("message", timeout=15, check=check)
         except asyncio.TimeoutError:
-            await ctx.send("Canceling removal. You took too long.")
+            await ctx.send("Menggagalkan edit karena respon kelamaan.")
             return
 
         if response.content.title() == "Name":
-            await ctx.send("What would you like to rename the target to?\n*Cannot be a name "
-                               "currently in use.*")
+            await ctx.send("Nama akan dirubah ke?\n*Tidak dapat menggunakan nama "
+                               "yang sekarang digunakan.*")
             check2 = lambda m: string.capwords(m.content) not in targets and m.author == author
 
         elif response.content.title() in ["Vault", "Vault Max"]:
-            await ctx.send("What would you like to set the {} "
-                               "to?".format(response.content.title()))
+            await ctx.send("Apa yang mau diubah {} "
+                               "ke?".format(response.content.title()))
             check2 = lambda m: m.content.isdigit() and int(m.content) > 0 and m.author == author
 
         elif response.content.title() == "Success":
-            await ctx.send("What would you like to change the success rate to?")
+            await ctx.send("Ingin merubah sukses rate ke?")
             check2 = lambda m: m.content.isdigit() and 0 < int(m.content) <= 100 and m.author == author
 
         elif response.content.title() == "Crew":
-            await ctx.send("What would you like to change the max crew size to?\n Cannot be "
-                               "the same as another target and will be the maximum number of "
-                               "players for that target.")
+            await ctx.send("Mau ubah banyaknya kru ke?\n Tidak dapat sama dengan "
+                               "target heist lainnya. Harap dilihat dulu target yang sudah ada "
+                               "agar tidak konflik.")
             crew_sizes = [subdict["Crew"] for subdict in targets.values()]
             check2 = lambda m: m.content.isdigit() and int(m.content) not in crew_sizes and m.author == author
             
         try:
             choice = await self.bot.wait_for("message", timeout=15, check=check2)
         except asyncio.TimeoutError:
-            await ctx.send("Canceling removal. You took too long.")
+            await ctx.send("Gagal mengubah karena respon terlalu lama.")
             return
 
         if response.content.title() == "Name":
@@ -295,31 +295,31 @@ class Heist(commands.Cog):
     @heist.command(name="remove")
     @checks.admin_or_permissions(manage_guild=True)
     async def _remove_heist(self, ctx, *, target: str):
-        """Remove a target from the heist list"""
+        """Menghapus target dari daftar target heist"""
         author = ctx.message.author
         guild = ctx.guild
         targets = await self.thief.get_guild_targets(guild)
         if string.capwords(target) in targets:
-            await ctx.send("Are you sure you want to remove {} from the list of "
-                               "targets?".format(string.capwords(target)))
+            await ctx.send("Apa kamu yakin akan menghapus {} dari daftar  "
+                               "target?".format(string.capwords(target)))
             try:
                 response = await self.bot.wait_for("message", timeout=15, check=lambda x: x.author == author)
             except asyncio.TimeoutError:
-                await ctx.send("Canceling removal. You took too long.")
+                await ctx.send("Gagal menghapus karena respon terlalu lama.")
                 return
             if response.content.title() == "Yes":
                 targets.pop(string.capwords(target))
                 await self.thief.save_targets(guild, targets)
-                msg = "{} was removed from the list of targets.".format(string.capwords(target))
+                msg = "{} telah dihapus dari target.".format(string.capwords(target))
             else:
-                msg = "Canceling target removal."
+                msg = "Menggagalkan penghapusan target."
         else:
-            msg = "That target does not exist."
+            msg = "Target tidak ada."
         await ctx.send(msg)
 
     @heist.command(name="info")
     async def _info_heist(self, ctx):
-        """Shows the Heist settings for this server."""
+        """Melihat informasi setting heist."""
         guild = ctx.guild
         config = await self.thief.get_guild_settings(guild)
         themes = await self.thief.get_guild_theme(guild)
@@ -339,17 +339,17 @@ class Heist(commands.Cog):
         time_values = [config["Wait"], config["Police"],
                        config["Sentence"], config["Death"]]
         timers = list(map(self.thief.time_format, time_values))
-        description = ["Heist Version {}".format(self.version), "Theme: {}".format(theme)]
+        description = ["Heist versi {}".format(self.version), "Tema: {}".format(theme)]
         footer = "Heist was developed by Redjumpman for Red Bot v2.\nUpdated to v3 by Malarne"
 
         embed = discord.Embed(colour=0x0066FF, description="\n".join(description))
         embed.title = "{} Heist Settings".format(guild.name)
-        embed.add_field(name="Heist Cost", value=config["Cost"])
-        embed.add_field(name="Base {} Cost".format(t_bail), value=config["Bail"])
-        embed.add_field(name="Crew Gather Time", value=timers[0])
-        embed.add_field(name="{} Timer".format(t_police), value=timers[1])
-        embed.add_field(name="Base {} {}".format(t_jail, t_sentence), value=timers[2])
-        embed.add_field(name="Death Timer", value=timers[3])
+        embed.add_field(name="Biaya heist", value=config["Cost"])
+        embed.add_field(name="Dasar harga {}".format(t_bail), value=config["Bail"])
+        embed.add_field(name="Waktu menunggu kru", value=timers[0])
+        embed.add_field(name="{} Waktu".format(t_police), value=timers[1])
+        embed.add_field(name="Dasar {} {}".format(t_jail, t_sentence), value=timers[2])
+        embed.add_field(name="Waktu mati", value=timers[3])
         embed.add_field(name="Hardcore Mode", value=hardcore)
         embed.set_footer(text=footer)
 
@@ -405,17 +405,17 @@ class Heist(commands.Cog):
             if remainder == "No Cooldown":
                 await self.thief.revive_member(author)
                 await self.thief.set_member_free(author)
-                msg = "You have risen from the dead!"
+                msg = "Kamu bangkit dari kematian!"
             else:
-                msg = ("You can't revive yet. You still need to wait:\n"
+                msg = ("Kamu tidak bisa bangkit sekarang, tunggu:\n"
                        "```{}```".format(remainder))
         else:
-            msg = "You still have a pulse. I can't revive someone who isn't dead."
+            msg = "Kamu masih hidup, tidak bisa menghidupkan seseorang yang sudah mati."
         await ctx.send(msg)
 
     @heist.command(name="stats")
     async def _stats_heist(self, ctx):
-        """Shows your Heist stats"""
+        """Menunjukan statistik heist kamu"""
         author = ctx.message.author
         avatar = ctx.message.author.avatar_url
         guild = ctx.guild
@@ -457,7 +457,7 @@ class Heist(commands.Cog):
 
     @heist.command(name="play")
     async def _play_heist(self, ctx):
-        """This begins a Heist"""
+        """Untuk memulai heist"""
         author = ctx.message.author
         guild = ctx.guild
         config = await self.thief.get_guild_settings(guild)
@@ -486,16 +486,16 @@ class Heist(commands.Cog):
             config["Planned"] = True
             await self.thief.config.guild(guild).Config.set(config)
             crew = await self.thief.add_crew_member(author)
-            await ctx.send("A {4} is being planned by {0}\nThe {4} "
-                               "will begin in {1} seconds. Type {2}heist play to join their "
+            await ctx.send("Sebuah perampokan direncanakan oleh {0}\n Perampokan"
+                               "akan dimulai dalam {1} detik. Ketik {2}heist play untuk bergabung "
                                "{3}.".format(escape(author.display_name, formatting=True), wait_time, ctx.prefix, t_crew, t_heist))
             await asyncio.sleep(wait_time)
             
             crew = await self.thief.config.guild(guild).Crew()
 
             if len(crew) <= 1:
-                await ctx.send("You tried to rally a {}, but no one wanted to follow you. The "
-                                   "{} has been cancelled.".format(t_crew, t_heist))
+                await ctx.send("Kamu mencoba memulai perampokan, tetapi tidak seorangpun mengikutimu. "
+                                   "{} telah digagalkan.".format(t_crew, t_heist))
                 await self.thief.reset_heist(guild)
             else:
                 await self.heist_game(ctx, guild, t_heist, t_crew, t_vault)
@@ -504,8 +504,8 @@ class Heist(commands.Cog):
             await bank.withdraw_credits(author, cost)
             crew = await self.thief.add_crew_member(author)
             crew_size = len(crew)
-            await ctx.send("{0} has joined the {2}.\nThe {2} now has {1} "
-                               "members.".format(escape(author.display_name, formatting=True), crew_size, t_crew))
+            await ctx.send("{0} telah bergabung ke {2}.\n{2} sekarang adalah {1} "
+                               "member.".format(escape(author.display_name, formatting=True), crew_size, t_crew))
 
     async def heist_game(self, ctx, guild, t_heist, t_crew, t_vault):
         config = await self.thief.get_guild_settings(guild)
@@ -518,20 +518,20 @@ class Heist(commands.Cog):
         players = [guild.get_member(int(x)) for x in curcrew]
         results = await self.thief.game_outcomes(guild, players, target)
         start_output = await self.thief.message_handler(guild, crew, players)
-        await ctx.send("Get ready! The {} is starting with {}\nThe {} has decided to "
-                           "hit **{}**.".format(t_heist, start_output, t_crew, target))
+        await ctx.send("Harap bersiap! {} dimulai dengan {}\n{} bersiap "
+                           "menyerang **{}**.".format(t_heist, start_output, t_crew, target))
         await asyncio.sleep(2)
         await self.thief.show_results(ctx, guild, results)
         curcrew = await self.thief.get_guild_crew(guild)
         if len(curcrew) != 0:
             players = [guild.get_member(int(x)) for x in curcrew]
             data = await self.thief.calculate_credits(guild, players, target)
-            headers = ["Players", "Credits Obtained", "Bonuses", "Total"]
+            headers = ["Pemain", "Uang didapat", "Bonus", "Total"]
             t = tabulate(data, headers=headers)
-            msg = ("The credits collected from the {} was split among the winners:\n```"
+            msg = ("Uang yang didapatkan dari {} dibagi kepada semua yang selamat:\n```"
                    "C\n{}```".format(t_vault, t))
         else:
-            msg = "No one made it out safe."
+            msg = "Tidak seorangpun selamat."
         config["Alert"] = int(time.perf_counter())
         await self.thief.config.guild(guild).Config.set(config)
         await self.thief.reset_heist(guild)
@@ -540,24 +540,24 @@ class Heist(commands.Cog):
     @heist.command(name="listthemes")
     @checks.admin_or_permissions(manage_guild=True)
     async def _themelist_heist(self, ctx):
-        """Lists available themes for heist."""
+        """Daftar tema tersedia untuk heist."""
         themes = [os.path.join(x).replace('.txt', '')
                   for x in os.listdir(str(bundled_data_path(self))) if x.endswith(".txt")]
         if len(themes) > 30:
             themes = themes[:30]
-        await ctx.send("Available Themes:```\n{}```".format('\n'.join(themes)))
+        await ctx.send("Tema tersedia:```\n{}```".format('\n'.join(themes)))
 
     @heist.command(name="theme")
     @checks.admin_or_permissions(manage_guild=True)
     async def _theme_heist(self, ctx, theme):
-        """Sets the theme for heist"""
+        """Mengatur tema untuk heist"""
         theme = theme.title()
         guild = ctx.guild
 
         if not os.path.exists(str(bundled_data_path(self)) + "/{}.txt".format(theme)):
             themes = [os.path.join(x).replace('.txt', '')
                       for x in os.listdir(str(bundled_data_path(self))) if x.endswith(".txt")]
-            msg = ("I could not find a theme with that name. Available Themes:"
+            msg = ("Aku tidak dapat menemukan judulnya. Tema tersedia:"
                    "```\n{}```".format('\n'.join(themes)))
         else:
             msg = await self.thief.theme_loader(guild, theme)
@@ -568,7 +568,7 @@ class Heist(commands.Cog):
 
     @commands.group(no_pm=True)
     async def setheist(self, ctx):
-        """Set different options in the heist config"""
+        """Mengatur opsi lain dari config heist"""
 
         pass
 
