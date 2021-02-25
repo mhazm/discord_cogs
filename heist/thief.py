@@ -214,15 +214,15 @@ class Thief:
 
         alert, patrol_time = await self.police_alert(author.guild)
         if not list(targets):
-            msg = ("Oh no! There are no targets! To start creating a target, use "
+            msg = ("Oh no! tidak ada target! untuk memulai membuat target, gunakan "
                    "{}heist createtarget.".format(prefix))
             return "Failed", msg
         elif config["Start"]:
-            msg = ("A {0} is already underway. Wait for the current one to "
-                   "end to plan another {0}.".format(t_heist))
+            msg = ("{0} sedang berjalan. Tunggu sampai itu selesai "
+                   "baru mulai {0}.".format(t_heist))
             return "Failed", msg
         elif author.id in crew:
-            msg = "You are already in the {}.".format(t_crew)
+            msg = "Kamu sudah ada di {}.".format(t_crew)
             return "Failed", msg
         elif await self.get_member_status(author) == "Apprehended":
             bail = await self.get_member_bailcost(author)
@@ -231,11 +231,11 @@ class Thief:
             remaining = self.cooldown_calculator(sentence_raw, time_served)
             sentence = self.time_format(sentence_raw)
             if remaining == "No Cooldown":
-                msg = ("Looks like your {} is over, but you're still in {}! Get released "
-                       "released by typing {}heist release .".format(t_sentence, t_jail, prefix))
+                msg = ("Sepertinya {} telah berakhir, tapi kamu masih didalam {}! Silahkan bebas "
+                       "bebas dengan ketik {}heist release .".format(t_sentence, t_jail, prefix))
             else:
-                msg = ("You are in {0}. You are serving a {1} of {2}.\nYou can wait out "
-                       "your remaining {1} of: {3} or pay {4} credits to finish your "
+                msg = ("Kamu berada di {0}. Kamu akan mendapatkan {1} dalam {2}.\nKamu dapat menunggu "
+                       "waktu kamu {1} pada: {3} atau bayar {4} credits untuk menyelesaikan "
                        "{5}.".format(t_jail, t_sentence, sentence, remaining, bail, t_bail))
             return "Failed", msg
         elif await self.get_member_status(author) == "Dead":
@@ -243,20 +243,20 @@ class Thief:
             base_timer = config["Death"]
             remaining = self.cooldown_calculator(death_time, base_timer)
             if remaining == "No Cooldown":
-                msg = ("Looks like you are still dead, but you can revive at anytime by using the "
+                msg = ("Kamu masih meninggal, tapi kamu dapat hidup kembali dengan command "
                        "command {}heist revive .".format(prefix))
             else:
-                msg = ("You are dead. You can revive in:\n{}\nUse the command {}heist revive when "
-                       "the timer has expired.".format(remaining, prefix))
+                msg = ("Kamu mati. Kamu dapat hidup lagi dalam:\n{}\nGunakan command {}heist revive setelah "
+                       "waktunya berakhir.".format(remaining, prefix))
             return "Failed", msg
         elif not await bank.get_balance(author) >= config["Cost"]:
-            msg = ("You do not have enough credits to cover the costs of "
-                   "entry. You need {} credits to participate.".format(cost))
+            msg = ("Kamu tidak punya uang untuk bergabung dalam perampokan "
+                   "Kamu membutuhkan {} IDR untuk bergabung.".format(cost))
             return "Failed", msg
         elif alert == "Hot":
-            msg = ("The {} are on high alert after the last target. We should "
-                   "wait for things to cool off before hitting another target.\n"
-                   "Time Remaining: {}".format(t_police, patrol_time))
+            msg = ("{} sedang dalam situasi panas karena heist terakhir. Kita harus "
+                   "menunggu sampai semuanya reda untuk perampokan berikutnya.\n"
+                   "Waktu tunggu: {}".format(t_police, patrol_time))
             return "Failed", msg
         else:
             return "Success", "Success"
@@ -319,7 +319,7 @@ class Thief:
                 results.append(good_thing[0].format(escape(player.display_name, formatting=True)))
             else:
                 bad_thing = random.choice(bad_out)
-                dropout_msg = (bad_thing[0] + "```\n{0} dropped out of the game.```").format(escape(player.display_name, formatting=True))
+                dropout_msg = (bad_thing[0] + "```\n{0} keluar dari heist.```").format(escape(player.display_name, formatting=True))
                 await self.failure_handler(player, bad_thing[1])
                 del crew[str(player.id)]
                 await self.config.guild(guild).Crew.set(crew)
@@ -411,7 +411,7 @@ class Thief:
         for result in results:
             await ctx.send(result)
             await asyncio.sleep(5)
-        await ctx.send("The {} is now over. Distributing player spoils...".format(t_heist))
+        await ctx.send("{} telah berakhir. Membagikan keuntungan...".format(t_heist))
         await asyncio.sleep(5)
 
     async def calculate_credits(self, guild, players, target):
@@ -446,7 +446,7 @@ class Thief:
 
     @staticmethod
     def criminal_level(level):
-        status = ["Greenhorn", "Renegade", "Veteran", "Commander", "War Chief", "Legend",
+        status = ["Pemula", "Renegade", "Veteran", "Commander", "War Chief", "Legend",
                   "Immortal"]
         breakpoints = [1, 10, 25, 50, 75, 100]
         return status[bisect.bisect_right(breakpoints, level)]
@@ -464,7 +464,7 @@ class Thief:
             await self.config.guild(guild).Theme.set(theme)
             config["Theme"] = theme_name
             await self.config.guild(guild).Config.set(config)
-            return "{} theme found. Heist will now use this for future games.".format(theme_name)
+            return "{} tema ditemukan. Heist menggunakan tema baru.".format(theme_name)
         else:
             return "Some keys were missing in your theme. Please check your txt file."
 
