@@ -5,7 +5,7 @@ Bail = jaminan
 Crew = crew
 Sentence = sentence
 Heist = heist
-Vault = vault
+Vault = kekayaan
 
 |Good| "{} menyiapkan mobil dan telah siap untuk pergi +500 credits.", 500
 |Good| "{} mematikan listrik bank. +1000 credits.", 1000
