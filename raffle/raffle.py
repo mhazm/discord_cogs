@@ -20,9 +20,9 @@ __version__ = "4.2.8"
 
 
 class Raffle(commands.Cog):
-    """Run simple Raffles for your server."""
+    """Membuat undian simpel di server."""
 
-    raffle_defaults = {"Channel": None, "Raffles": {}}
+    raffle_defaults = {"Channel": None, "Undian": {}}
 
     def __init__(self, bot):
         self.bot = bot
@@ -31,47 +31,47 @@ class Raffle(commands.Cog):
         self.load_check = self.bot.loop.create_task(self.raffle_worker())
 
     async def red_delete_data_for_user(self, **kwargs):
-        """Nothing to delete."""
+        """Tidak ada yang dapat dihapus."""
         return
 
     @commands.group(autohelp=True)
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
     async def raffle(self, ctx):
-        """Raffle group command"""
+        """Kategori command Undian"""
         pass
 
     @raffle.command()
     async def version(self, ctx):
-        """Displays the currently installed version of raffle."""
-        await ctx.send(f"You are running raffle version {__version__}")
+        """Menampilkan versi undian saat ini."""
+        await ctx.send(f"Kamu menjalankan Undian versi : {__version__}")
 
     @raffle.command(hidden=True)
     @commands.is_owner()
     async def clear(self, ctx):
         await self.config.guild(ctx.guild).Raffles.clear()
-        await ctx.send("Raffle data cleared out.")
+        await ctx.send("Data undian telah dihapus.")
 
     @raffle.command()
     async def start(self, ctx, timer, *, title: str):
-        """Starts a raffle.
+        """Memulai undian.
 
-        Timer accepts a integer input that represents seconds or it will
-        take the format of HH:MM:SS.
+        Timer menerima masukan bilangan bulat yang mewakili detik atau 
+        akan berformat HH:MM:SS.
 
-        Example timer inputs:
-        `80`       = 1 minute and 20 seconds or 80 seconds
-        `30:10`    = 30 minutes and 10 seconds
-        `24:00:00` = 1 day or 24 hours
+        Contoh input timer:
+        `80`       = 1 menit dan 20 detik atau 80 detik
+        `30:10`    = 30 menit dan 10 detik
+        `24:00:00` = 1 hari atau 24 jam
 
-        Title should not be longer than 35 characters.
-        Only one raffle can be active per server.
+        Judul tidak dapat melebihi 35 karakter.
+        Hanya 1 undian yang dapat dijalankan dalam 1 waktu.
         """
         if not ctx.channel.permissions_for(ctx.guild.me).embed_links:
-            await ctx.send("I need the Embed Links permission to be able to start raffles.")
+            await ctx.send("Saya butuh izin untuk membuat embed link.")
             return
         if not ctx.channel.permissions_for(ctx.guild.me).add_reactions:
-            await ctx.send("I need the Add Reactions permission to be able to start raffles.")
+            await ctx.send("Saya butuh izin untuk dapat menambahkan reaction untuk memulai undian.")
             return
         timer = await self.start_checks(ctx, timer, title)
         if timer is None:
@@ -80,9 +80,9 @@ class Raffle(commands.Cog):
         try:
             description, winners, dos, roles = await self.raffle_setup(ctx)
         except asyncio.TimeoutError:
-            return await ctx.send("Response timed out. A raffle failed to start.")
+            return await ctx.send("Waktu habis. Undian gagal dibuat.")
         str_roles = [r[0] for r in roles]
-        description = f"{description}\n\nReact to this message with \U0001F39F to enter.\n\n"
+        description = f"{description}\n\nReaction pesan ini dengan \U0001F39F untuk bergabung.\n\n"
 
         channel = await self._get_channel(ctx)
         end = calendar.timegm(ctx.message.created_at.utctimetuple()) + timer
@@ -95,13 +95,13 @@ class Raffle(commands.Cog):
         except:
             color = await self.bot.get_embed_color(ctx)
             embed = discord.Embed(description=description, title=title, color=color)  ### new code
-        embed.add_field(name="Days on Server", value=f"{dos}")
+        embed.add_field(name="Hari di server", value=f"{dos}")
         role_info = f'{", ".join(str_roles) if roles else "@everyone"}'
-        embed.add_field(name="Allowed Roles", value=role_info)
+        embed.add_field(name="Role", value=role_info)
         msg = await channel.send(embed=embed)
         embed.set_footer(
             text=(
-                f"Started by: {ctx.author.name} | Winners: {winners} | Ends at {fmt_end} UTC | Raffle ID: {msg.id}"
+                f"Dimulai oleh: {ctx.author.name} | Pemenang: {winners} | Berakhir pada {fmt_end} UTC | Undian ID: {msg.id}"
             )
         )
         await msg.edit(embed=embed)
@@ -122,39 +122,39 @@ class Raffle(commands.Cog):
 
     @raffle.command()
     async def end(self, ctx, message_id: int = None):
-        """Ends a raffle early. A winner will still be chosen."""
+        """Mengakhiri undian lebih cepat. Pemenang tetap dapat dipilih."""
         if message_id is None:
             try:
                 message_id = await self._menu(ctx)
             except ValueError:
-                return await ctx.send("There are no active raffles to end.")
+                return await ctx.send("Tidak ada undian yang aktif saat ini.")
             except asyncio.TimeoutError:
                 return await ctx.send("Response timed out.")
 
         try:
             await self.raffle_teardown(ctx.guild, message_id)
         except discord.NotFound:
-            await ctx.send("The message id provided could not be found.")
+            await ctx.send("message id tidak dapat ditemukan.")
         else:
-            await ctx.send("The raffle has been ended.")
+            await ctx.send("Undian telah berakhir.")
 
     @raffle.command()
     async def cancel(self, ctx, message_id: int = None):
-        """Cancels an on-going raffle. No winner is chosen."""
+        """Mengagalkan undian yang sedang berlangsung. Tidak ada pemenang."""
         if message_id is None:
             try:
                 message_id = await self._menu(ctx, end="cancel")
             except ValueError:
-                return await ctx.send("There are no active raffles to cancel.")
+                return await ctx.send("Tidak ada undian yang berjalan, tidak ada yang dapat dicancel.")
             except asyncio.TimeoutError:
                 return await ctx.send("Response timed out.")
 
         try:
             await self.raffle_removal(ctx, message_id)
         except discord.NotFound:
-            await ctx.send("The message id provided could not be found.")
+            await ctx.send("message id tidak dapat ditemukan.")
         else:
-            await ctx.send("The raffle has been canceled.")
+            await ctx.send("Undian telah dibatalkan.")
         finally:
             # Attempt to cleanup if a message was deleted and it's still stored in config.
             async with self.config.guild(ctx.guild).Raffles() as r:
@@ -164,7 +164,7 @@ class Raffle(commands.Cog):
                     pass
 
     async def _menu(self, ctx, end="end"):
-        title = f"Which of the following **Active** Raffles would you like to {end}?"
+        title = f"Manakah dari undian yang **Aktif** berikut yang ingin kamu {end}?"
         async with self.config.guild(ctx.guild).Raffles() as r:
             if not r:
                 raise ValueError
@@ -208,13 +208,13 @@ class Raffle(commands.Cog):
         for raffle, number_emoji in zip(truncate, emojis):
             description += f"{number_emoji} - {raffle[1]['Title']}\n"
             e.description = description
-            e.set_footer(text="Type the number of the raffle you wish to end.")
+            e.set_footer(text="Ketik nomer undian yang ingin kamu gagalkan.")
             embeds.append(e)
         return e
 
     @raffle.command()
     async def reroll(self, ctx, channel: discord.TextChannel, messageid: int):
-        """Reroll the winner for a raffle. Requires the channel and message id."""
+        """Reroll pemenang. Membutuhkan channel dan message id."""
         try:
             msg = await channel.get_message(messageid)
         except AttributeError:
@@ -227,7 +227,7 @@ class Raffle(commands.Cog):
         try:
             await self.pick_winner(ctx.guild, channel, msg)
         except AttributeError:
-            return await ctx.send("This is not a raffle message.")
+            return await ctx.send("Ini bukan message undian, kamu bodoh?")
         except IndexError:
             return await ctx.send(
                 "Nice try slim. You can't add a reaction to a random msg "
