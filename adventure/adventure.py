@@ -354,7 +354,7 @@ class Adventure(commands.Cog):
             },
             "loadouts": {},
             "class": {"name": _("Hero"), "ability": False, "desc": _("Your basic adventuring hero."), "cooldown": 0,},
-            "skill": {"pool": 0, "att": 0, "cha": 0, "int": 0},
+            "skill": {"pool": 10, "att": 0, "cha": 0, "int": 0},
             "adventures": {
                 "wins": 0,
                 "loses": 0,
@@ -370,20 +370,20 @@ class Adventure(commands.Cog):
 
         default_guild = {
             "cart_channels": [],
-            "god_name": "",
-            "cart_name": "",
+            "god_name": "Asura",
+            "cart_name": "Viasia",
             "embed": True,
             "cooldown": 0,
             "cartroom": None,
             "cart_timeout": 10800,
-            "cooldown_timer_manual": 120,
+            "cooldown_timer_manual": 60,
             "rebirth_cost": 100.0,
             "disallow_withdraw": True,
             "max_allowed_withdraw": 50000,
         }
         default_global = {
-            "god_name": _("Herbert"),
-            "cart_name": _("Hawl's brother"),
+            "god_name": _("Asura"),
+            "cart_name": _("Viasia"),
             "theme": "default",
             "restrict": False,
             "embed": True,
@@ -392,7 +392,7 @@ class Adventure(commands.Cog):
             "schema_version": 1,
             "rebirth_cost": 100.0,
             "themes": {},
-            "daily_bonus": {"1": 0, "2": 0, "3": 0.5, "4": 0, "5": 0.5, "6": 1.0, "7": 1.0},
+            "daily_bonus": {"1": 0.5, "2": 0.5, "3": 0.5, "4": 0.5, "5": 0.5, "6": 1.0, "7": 1.0},
             "tax_brackets": {},
             "separate_economy": True,
             "to_conversion_rate": 10,
