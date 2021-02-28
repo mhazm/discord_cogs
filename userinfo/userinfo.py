@@ -5,7 +5,6 @@ from redbot.core import bank, commands
 from redbot.core.utils import AsyncIter
 from redbot.core.utils.chat_formatting import humanize_number
 from redbot.core.utils.common_filters import filter_invites
-from .thief import Thief, PluralDict
 
 adventure_bank = None
 
