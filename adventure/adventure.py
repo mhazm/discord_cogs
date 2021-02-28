@@ -5721,7 +5721,7 @@ class Adventure(commands.Cog):
                 "but **a{attr} {chall}** "
                 "is guarding it with{threat}. \n\n"
                 "What will you do and will other heroes help your cause?\n"
-                "Heroes have 30 seconds to participate via reaction:"
+                "Heroes have 1 minute to participate via reaction:"
                 "\n\nReact with: {reactions}"
             ).format(
                 attr=session.attribute,
@@ -5771,11 +5771,11 @@ class Adventure(commands.Cog):
                     adventure_msg = await ctx.send(embed=embed)
                 else:
                     adventure_msg = await ctx.send(f"{adventure_msg}\n{normal_text}")
-                timeout = 30
+                timeout = 60 * 1
         else:
             embed = discord.Embed(colour=discord.Colour.blurple())
             use_embeds = await self.config.guild(ctx.guild).embed() and ctx.channel.permissions_for(ctx.me).embed_links
-            timeout = 30
+            timeout = 60 * 1
             obscured_text = _(
                 "What will you do and will other heroes help your cause?\n"
                 "Heroes have {time} minutes to participate via reaction:"
@@ -5792,7 +5792,7 @@ class Adventure(commands.Cog):
                 + "** - **"
                 + _("Run")
                 + "**",
-                time=timeout // 30,
+                time=timeout // 60
             )
             if use_embeds:
                 embed.description = f"{adventure_msg}\n{obscured_text}"
