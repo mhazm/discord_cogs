@@ -5680,7 +5680,7 @@ class Adventure(commands.Cog):
                 "but **a{attr} {chall}** "
                 "just landed in front of you glaring! \n\n"
                 "What will you do and will other heroes be brave enough to help you?\n"
-                "Heroes have 5 minutes to participate via reaction:"
+                "Heroes have 3 minutes to participate via reaction:"
                 "\n\nReact with: {reactions}"
             ).format(
                 attr=session.attribute,
@@ -5700,7 +5700,7 @@ class Adventure(commands.Cog):
             basilisk_text = _(
                 "but **a{attr} {chall}** stepped out looking around. \n\n"
                 "What will you do and will other heroes help your cause?\n"
-                "Heroes have 3 minutes to participate via reaction:"
+                "Heroes have 2 minutes to participate via reaction:"
                 "\n\nReact with: {reactions}"
             ).format(
                 attr=session.attribute,
@@ -5721,7 +5721,7 @@ class Adventure(commands.Cog):
                 "but **a{attr} {chall}** "
                 "is guarding it with{threat}. \n\n"
                 "What will you do and will other heroes help your cause?\n"
-                "Heroes have 2 minutes to participate via reaction:"
+                "Heroes have 30 seconds to participate via reaction:"
                 "\n\nReact with: {reactions}"
             ).format(
                 attr=session.attribute,
@@ -5751,7 +5751,7 @@ class Adventure(commands.Cog):
                     adventure_msg = await ctx.send(embed=embed)
                 else:
                     adventure_msg = await ctx.send(f"{adventure_msg}\n{dragon_text}")
-                timeout = 60 * 4
+                timeout = 60 * 2
 
             elif session.miniboss:
                 if use_embeds:
@@ -5762,7 +5762,7 @@ class Adventure(commands.Cog):
                     adventure_msg = await ctx.send(embed=embed)
                 else:
                     adventure_msg = await ctx.send(f"{adventure_msg}\n{basilisk_text}")
-                timeout = 60 * 2
+                timeout = 60 * 1
             else:
                 if use_embeds:
                     embed.description = f"{adventure_msg}\n{normal_text}"
@@ -5771,11 +5771,11 @@ class Adventure(commands.Cog):
                     adventure_msg = await ctx.send(embed=embed)
                 else:
                     adventure_msg = await ctx.send(f"{adventure_msg}\n{normal_text}")
-                timeout = 60 * 1
+                timeout = 30
         else:
             embed = discord.Embed(colour=discord.Colour.blurple())
             use_embeds = await self.config.guild(ctx.guild).embed() and ctx.channel.permissions_for(ctx.me).embed_links
-            timeout = 60 * 1
+            timeout = 30
             obscured_text = _(
                 "What will you do and will other heroes help your cause?\n"
                 "Heroes have {time} minutes to participate via reaction:"
@@ -5792,7 +5792,7 @@ class Adventure(commands.Cog):
                 + "** - **"
                 + _("Run")
                 + "**",
-                time=timeout // 60,
+                time=timeout // 30,
             )
             if use_embeds:
                 embed.description = f"{adventure_msg}\n{obscured_text}"
@@ -7599,7 +7599,7 @@ class Adventure(commands.Cog):
                 log.exception("Error with the new character sheet", exc_info=exc)
                 continue
             userxp = int(xp + (xp * 0.5 * c.rebirths) + max((xp * 0.1 * min(250, c._int / 10)), 0))
-            usercp = int(cp + max((cp * 0.1 * min(1000, (c._luck + c._att) / 10)), 0))
+            usercp = int(cp + max((cp * 2 * min(1000, (c._luck + c._att) / 10)), 0))
             userxp = int(userxp * (c.gear_set_bonus.get("xpmult", 1) + daymult))
             usercp = int(usercp * (c.gear_set_bonus.get("cpmult", 1) + daymult))
             newxp += userxp
