@@ -275,9 +275,6 @@ class Userinfo(commands.Cog):
                             balance_count += 1
                             bankstat += f"**Adventure**: {str(humanize_number(adventure_currency))} {await adventure_bank.get_currency_name(ctx.guild)}"
                 data.add_field(name="Balances" if balance_count > 1 else "Balance", value=bankstat)
-                data.add_field(name="Berhasil Heist", value=await self.thief.get_member_spree(author))
-                data.add_field(name="Total mati", value=await self.thief.get_member_totaldeaths(author))
-                data.add_field(name="Telah ditangkap", value=await self.thief.get_member_totaljails(author))
             await ctx.send(embed=data)
 
 
