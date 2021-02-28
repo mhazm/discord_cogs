@@ -5626,14 +5626,14 @@ class Adventure(commands.Cog):
         if easy_mode:
             no_monster = False
             if monster_roster[challenge]["boss"]:
-                timer = 60 * 5
+                timer = 60 * 4
                 self.bot.dispatch("adventure_boss", ctx)
                 text = box(_("\n [{} Alarm!]").format(new_challenge), lang="css")
             elif monster_roster[challenge]["miniboss"]:
-                timer = 60 * 3
+                timer = 60 * 2
                 self.bot.dispatch("adventure_miniboss", ctx)
             else:
-                timer = 60 * 2
+                timer = 60 * 1
             if "Transcended" in new_challenge:
                 self.bot.dispatch("adventure_transcended", ctx)
             elif "Ascended" in new_challenge:
@@ -5643,7 +5643,7 @@ class Adventure(commands.Cog):
             elif attribute == " possessed":
                 self.bot.dispatch("adventure_possessed", ctx)
         else:
-            timer = 60 * 3
+            timer = 60 * 2
             no_monster = random.randint(0, 100) == 25
         self._sessions[ctx.guild.id] = GameSession(
             challenge=new_challenge if not no_monster else None,
@@ -5751,7 +5751,7 @@ class Adventure(commands.Cog):
                     adventure_msg = await ctx.send(embed=embed)
                 else:
                     adventure_msg = await ctx.send(f"{adventure_msg}\n{dragon_text}")
-                timeout = 60 * 5
+                timeout = 60 * 4
 
             elif session.miniboss:
                 if use_embeds:
@@ -5762,7 +5762,7 @@ class Adventure(commands.Cog):
                     adventure_msg = await ctx.send(embed=embed)
                 else:
                     adventure_msg = await ctx.send(f"{adventure_msg}\n{basilisk_text}")
-                timeout = 60 * 3
+                timeout = 60 * 2
             else:
                 if use_embeds:
                     embed.description = f"{adventure_msg}\n{normal_text}"
@@ -5771,11 +5771,11 @@ class Adventure(commands.Cog):
                     adventure_msg = await ctx.send(embed=embed)
                 else:
                     adventure_msg = await ctx.send(f"{adventure_msg}\n{normal_text}")
-                timeout = 60 * 2
+                timeout = 60 * 1
         else:
             embed = discord.Embed(colour=discord.Colour.blurple())
             use_embeds = await self.config.guild(ctx.guild).embed() and ctx.channel.permissions_for(ctx.me).embed_links
-            timeout = 60 * 3
+            timeout = 60 * 1
             obscured_text = _(
                 "What will you do and will other heroes help your cause?\n"
                 "Heroes have {time} minutes to participate via reaction:"
